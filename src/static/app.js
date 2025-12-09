@@ -247,6 +247,10 @@ document.addEventListener("DOMContentLoaded", () => {
   closeLoginModal.addEventListener("click", closeLoginModalHandler);
 
   // Dark mode functions
+  function getSystemDarkModePreference() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
   function toggleDarkMode() {
     isDarkMode = !isDarkMode;
     updateDarkModeUI();
@@ -259,13 +263,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateDarkModeUI() {
-    if (isDarkMode) {
-      document.body.classList.add("dark-mode");
-      themeIcon.textContent = "☀️";
-    } else {
-      document.body.classList.remove("dark-mode");
-      themeIcon.textContent = "🌙";
-    }
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    themeIcon.textContent = isDarkMode ? "☀️" : "🌙";
   }
 
   function loadDarkModePreference() {
@@ -275,12 +274,12 @@ document.addEventListener("DOMContentLoaded", () => {
         isDarkMode = savedPreference === "enabled";
       } else {
         // Check system preference if no saved preference exists
-        isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        isDarkMode = getSystemDarkModePreference();
       }
     } catch (error) {
       console.warn("Unable to load dark mode preference:", error);
       // Fallback to system preference if localStorage is unavailable
-      isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      isDarkMode = getSystemDarkModePreference();
     }
     updateDarkModeUI();
   }
