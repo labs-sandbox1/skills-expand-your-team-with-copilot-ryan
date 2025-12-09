@@ -657,6 +657,20 @@ footer {
   gap: 10px;
 }
 
+#user-controls > * {
+  margin-left: 10px;
+}
+
+#user-controls > *:first-child {
+  margin-left: 0;
+}
+
+@supports (gap: 10px) {
+  #user-controls > * {
+    margin-left: 0;
+  }
+}
+
 #user-status {
   display: flex;
   align-items: center;

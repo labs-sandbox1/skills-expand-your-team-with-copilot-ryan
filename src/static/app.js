@@ -50,6 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Dark mode state
   let isDarkMode = false;
+  let darkModeMediaQuery = null;
+
+  // Initialize dark mode media query
+  try {
+    darkModeMediaQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  } catch (error) {
+    console.warn("Unable to initialize dark mode media query:", error);
+  }
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -248,13 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Dark mode functions
   function getSystemDarkModePreference() {
-    try {
-      const mediaQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-      return mediaQuery ? mediaQuery.matches : false;
-    } catch (error) {
-      console.warn("Unable to detect system dark mode preference:", error);
-      return false;
-    }
+    return darkModeMediaQuery ? darkModeMediaQuery.matches : false;
   }
 
   function toggleDarkMode() {
