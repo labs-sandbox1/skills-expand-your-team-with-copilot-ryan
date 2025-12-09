@@ -1,0 +1,95 @@
+name: Bug Report
+description: Report a problem with the activities website
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Report a Bug
+        Use this form to report a problem or issue with the activities website.
+        
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's not working?
+      description: Clearly describe the problem you're experiencing
+      placeholder: "Describe what's broken or not working as expected"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen?
+      description: Describe what you expected to happen instead
+      placeholder: "Explain how it should work"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can someone see this problem?
+      placeholder: |
+        1. Go to the activities page
+        2. Click on '...'
+        3. See the error
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area is affected?
+      description: Which part of the website has the problem?
+      options:
+        - Activities display (cards)
+        - Calendar view
+        - Filters (day, time, difficulty, category)
+        - Search functionality
+        - Student registration
+        - Teacher login
+        - Colors/styling
+        - Other
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: severity
+    attributes:
+      label: How severe is this issue?
+      description: How much does this impact using the website?
+      options:
+        - Critical - Website is unusable
+        - High - Major feature doesn't work
+        - Medium - Feature partially works or has workaround
+        - Low - Minor issue or cosmetic problem
+    validations:
+      required: true
+      
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Information (Optional)
+      description: Any screenshots, error messages, or other helpful details
+      placeholder: "Paste any error messages or describe anything else that might help"
+    validations:
+      required: false
+      
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Acceptance Criteria
+        - The reported issue should be fixed
+        - The functionality should work as described in "What should happen?"
+        - The fix should not break other existing features
+        - The solution should be tested to ensure it resolves the issue
+        
+        ### Implementation Context
+        - **Frontend files**: `src/static/index.html`, `src/static/app.js`, `src/static/styles.css`
+        - **Backend files**: `src/app.py`, `src/backend/database.py`, `src/backend/routers/activities.py`
+        - **Data format**: Activities use 24-hour time format internally (e.g., "15:30")
+        - **Database**: MongoDB collection storing activities with structure defined in `database.py`
