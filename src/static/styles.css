@@ -35,9 +35,9 @@
 /* Dark mode color palette */
 body.dark-mode {
   /* Primary colors */
-  --primary: #534bae;
-  --primary-light: #7a6fc3;
-  --primary-dark: #1a237e;
+  --primary: #7a6fc3;
+  --primary-light: #a89dd9;
+  --primary-dark: #534bae;
   --primary-text: #ffffff;
 
   /* Secondary colors */

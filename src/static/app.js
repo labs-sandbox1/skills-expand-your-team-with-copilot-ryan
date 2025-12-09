@@ -271,10 +271,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function loadDarkModePreference() {
     try {
       const savedPreference = localStorage.getItem("darkMode");
-      isDarkMode = savedPreference === "enabled";
+      if (savedPreference) {
+        isDarkMode = savedPreference === "enabled";
+      } else {
+        // Check system preference if no saved preference exists
+        isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
     } catch (error) {
       console.warn("Unable to load dark mode preference:", error);
-      isDarkMode = false;
+      // Fallback to system preference if localStorage is unavailable
+      isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     updateDarkModeUI();
   }
