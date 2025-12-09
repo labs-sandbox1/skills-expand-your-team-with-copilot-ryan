@@ -133,9 +133,22 @@
 
           <!-- Activities Content -->
           <div class="activities-content">
+            <!-- View Toggle -->
+            <div class="view-toggle">
+              <button class="view-toggle-btn active" data-view="card">
+                <span class="view-icon">📋</span> Card View
+              </button>
+              <button class="view-toggle-btn" data-view="calendar">
+                <span class="view-icon">📅</span> Calendar View
+              </button>
+            </div>
+            
             <div id="activities-list">
               <!-- Activities will be loaded here -->
               <p>Loading activities...</p>
+            </div>
+            <div id="calendar-view" class="hidden">
+              <!-- Calendar will be loaded here -->
             </div>
             <div id="message" class="hidden message"></div>
           </div>
