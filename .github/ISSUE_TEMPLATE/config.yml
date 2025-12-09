@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Development Guide
+    url: https://github.com/labs-sandbox1/skills-expand-your-team-with-copilot-ryan/blob/main/docs/how-to-develop.md
+    about: Learn how to set up and develop the project locally
+  - name: GitHub Copilot Help
+    url: https://docs.github.com/en/copilot
+    about: Learn more about using GitHub Copilot

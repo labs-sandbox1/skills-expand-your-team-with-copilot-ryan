@@ -1,0 +1,115 @@
+name: Add New Activity
+description: Request to add a new extracurricular activity to the system
+title: "[New Activity]: "
+labels: ["enhancement", "activity"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Add a New Activity
+        Use this form to add a new extracurricular activity to Mergington High School's activity system.
+        
+  - type: input
+    id: activity-name
+    attributes:
+      label: Activity Name
+      description: What is the name of the activity?
+      placeholder: "e.g., Photography Club, Volleyball Team, Band Practice"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: description
+    attributes:
+      label: Activity Description
+      description: Provide a detailed description of the activity
+      placeholder: "Describe what students will do in this activity, what they'll learn, and any special features"
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: days
+    attributes:
+      label: Days of the Week
+      description: Which days does this activity meet? (Select all that apply)
+      multiple: true
+      options:
+        - Monday
+        - Tuesday
+        - Wednesday
+        - Thursday
+        - Friday
+        - Saturday
+        - Sunday
+    validations:
+      required: true
+      
+  - type: input
+    id: start-time
+    attributes:
+      label: Start Time
+      description: What time does the activity start? (Use 24-hour format)
+      placeholder: "e.g., 15:30 for 3:30 PM, 16:00 for 4:00 PM"
+    validations:
+      required: true
+      
+  - type: input
+    id: end-time
+    attributes:
+      label: End Time
+      description: What time does the activity end? (Use 24-hour format)
+      placeholder: "e.g., 17:00 for 5:00 PM, 18:00 for 6:00 PM"
+    validations:
+      required: true
+      
+  - type: input
+    id: max-participants
+    attributes:
+      label: Maximum Participants
+      description: How many students can participate in this activity?
+      placeholder: "e.g., 20"
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Difficulty Level (Optional)
+      description: Is this activity intended for a specific skill level?
+      options:
+        - Not Specified (All Levels)
+        - Beginner
+        - Intermediate
+        - Advanced
+    validations:
+      required: false
+      
+  - type: textarea
+    id: initial-participants
+    attributes:
+      label: Initial Participants (Optional)
+      description: List any students already signed up (one email per line)
+      placeholder: |
+        student1@mergington.edu
+        student2@mergington.edu
+    validations:
+      required: false
+      
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Acceptance Criteria
+        - A new activity should appear in the activities list with all provided details
+        - The activity should be filterable by day, time, and difficulty level (if specified)
+        - Students should be able to sign up for the activity
+        - The schedule should display correctly in both card view and calendar view
+        
+        ### Implementation Hints
+        - Add the activity to the MongoDB `activities_collection` database
+        - For reference, see the structure in `initial_activities` dictionary in `src/backend/database.py`
+        - Follow the existing structure with fields: description, schedule, schedule_details, max_participants, participants
+        - The `schedule` field should be a human-readable string (e.g., "Mondays and Fridays, 3:15 PM - 4:45 PM")
+        - The `schedule_details` field should contain: days (list), start_time (24-hour format), end_time (24-hour format)
+        - Only add the `difficulty` field if a difficulty level is specified
+        - Note: If the database is being reset/initialized, also add to `initial_activities` in `src/backend/database.py`

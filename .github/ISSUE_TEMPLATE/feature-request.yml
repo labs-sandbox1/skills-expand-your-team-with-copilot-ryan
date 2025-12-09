@@ -1,0 +1,112 @@
+name: Feature Request
+description: Suggest a new feature for the activities website
+title: "[Feature]: "
+labels: ["enhancement", "feature-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Request a New Feature
+        Use this form to suggest new functionality for the activities website.
+        
+  - type: input
+    id: feature-name
+    attributes:
+      label: Feature Name
+      description: What would you call this feature?
+      placeholder: "e.g., Email Notifications, Activity Waitlist, Export to PDF"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Describe the new feature in detail
+      placeholder: "Explain what this feature would do and how it would work"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What need or problem would this feature address?
+      placeholder: "Describe the current challenge or need (e.g., 'Teachers need to know when students sign up')"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: who-benefits
+    attributes:
+      label: Who would benefit?
+      description: Who would use this feature?
+      placeholder: "e.g., Students, Teachers, Administrators, Parents"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: usage-example
+    attributes:
+      label: How would it be used?
+      description: Provide a step-by-step example of using this feature
+      placeholder: |
+        1. Teacher clicks on "Export" button
+        2. System generates a PDF of all activities
+        3. Teacher can print or email the PDF
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature?
+      options:
+        - High - Very important, would greatly improve the system
+        - Medium - Would be helpful but not critical
+        - Low - Nice to have
+    validations:
+      required: true
+      
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions (Optional)
+      description: Are there other ways to solve this problem?
+      placeholder: "Describe any workarounds or alternative approaches"
+    validations:
+      required: false
+      
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context (Optional)
+      description: Any other information that would be helpful
+      placeholder: "Include examples, mockups, or other relevant details"
+    validations:
+      required: false
+      
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Acceptance Criteria
+        - The feature should be implemented as described
+        - The feature should be easy to use and well-integrated with existing functionality
+        - The feature should work reliably and handle edge cases
+        - Documentation should be updated if needed
+        
+        ### Implementation Context
+        - **Technology stack**: HTML, CSS, JavaScript (frontend), Python/FastAPI (backend), MongoDB (database)
+        - **No additional services**: Keep everything within the existing application
+        - **Simplicity**: Code should be easy for non-technical staff to maintain
+        - **Frontend**: `src/static/` directory (index.html, app.js, styles.css)
+        - **Backend**: `src/backend/` directory (database.py, routers/)
+        - **Main app**: `src/app.py`
+        
+        ### Limitations
+        - Use only HTML, CSS, JavaScript, and Python
+        - No additional apps or services
+        - No command-line tools
+        - Keep the code structure simple and easy to understand
