@@ -49,7 +49,7 @@ body:
     attributes:
       label: Start Time
       description: What time does the activity start? (Use 24-hour format)
-      placeholder: "e.g., 15:30 for 3:30 PM, 07:00 for 7:00 AM"
+      placeholder: "e.g., 15:30 for 3:30 PM, 16:00 for 4:00 PM"
     validations:
       required: true
       
@@ -58,7 +58,7 @@ body:
     attributes:
       label: End Time
       description: What time does the activity end? (Use 24-hour format)
-      placeholder: "e.g., 17:00 for 5:00 PM, 08:30 for 8:30 AM"
+      placeholder: "e.g., 17:00 for 5:00 PM, 18:00 for 6:00 PM"
     validations:
       required: true
       
@@ -106,8 +106,10 @@ body:
         - The schedule should display correctly in both card view and calendar view
         
         ### Implementation Hints
-        - Add the activity to the `initial_activities` dictionary in `src/backend/database.py`
+        - Add the activity to the MongoDB `activities_collection` database
+        - For reference, see the structure in `initial_activities` dictionary in `src/backend/database.py`
         - Follow the existing structure with fields: description, schedule, schedule_details, max_participants, participants
         - The `schedule` field should be a human-readable string (e.g., "Mondays and Fridays, 3:15 PM - 4:45 PM")
         - The `schedule_details` field should contain: days (list), start_time (24-hour format), end_time (24-hour format)
         - Only add the `difficulty` field if a difficulty level is specified
+        - Note: If the database is being reset/initialized, also add to `initial_activities` in `src/backend/database.py`

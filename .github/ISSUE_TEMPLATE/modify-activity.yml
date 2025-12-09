@@ -80,8 +80,10 @@ body:
         - Existing student registrations should be preserved
         
         ### Implementation Hints
-        - Locate the activity in the `initial_activities` dictionary in `src/backend/database.py`
+        - Update the activity in the MongoDB `activities_collection` database
+        - For reference structure, see `initial_activities` dictionary in `src/backend/database.py`
         - Update the relevant fields based on the change type
         - For schedule changes, update both `schedule` (human-readable) and `schedule_details` (structured data)
         - For time changes, use 24-hour format in `schedule_details` (e.g., "15:30" for 3:30 PM)
         - Ensure the human-readable `schedule` string matches the `schedule_details` data
+        - Note: If the database is being reset/initialized, also update the entry in `initial_activities` in `src/backend/database.py`
