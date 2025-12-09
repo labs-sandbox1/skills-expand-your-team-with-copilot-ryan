@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryFilters = document.querySelectorAll(".category-filter");
   const dayFilters = document.querySelectorAll(".day-filter");
   const timeFilters = document.querySelectorAll(".time-filter");
+  const difficultyFilters = document.querySelectorAll(".difficulty-filter");
 
   // Authentication elements
   const loginButton = document.getElementById("login-button");
@@ -44,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
+  let currentDifficulty = "";
 
   // Authentication state
   let currentUser = null;
@@ -79,6 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeTimeFilter) {
       currentTimeRange = activeTimeFilter.dataset.time;
     }
+
+    // Initialize difficulty filter
+    const activeDifficultyFilter = document.querySelector(".difficulty-filter.active");
+    if (activeDifficultyFilter) {
+      currentDifficulty = activeDifficultyFilter.dataset.difficulty;
+    }
   }
 
   // Function to set day filter
@@ -104,6 +112,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update active class
     timeFilters.forEach((btn) => {
       if (btn.dataset.time === timeRange) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    fetchActivities();
+  }
+
+  // Function to set difficulty filter
+  function setDifficultyFilter(difficulty) {
+    currentDifficulty = difficulty;
+
+    // Update active class
+    difficultyFilters.forEach((btn) => {
+      if (btn.dataset.difficulty === difficulty) {
         btn.classList.add("active");
       } else {
         btn.classList.remove("active");
@@ -452,6 +476,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
+      // Handle difficulty filter
+      if (currentDifficulty) {
+        queryParams.push(`difficulty=${encodeURIComponent(currentDifficulty)}`);
+      }
+
       const queryString =
         queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
       const response = await fetch(`/activities${queryString}`);
@@ -629,6 +658,11 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
+      <div class="share-container">
+        <button class="share-button" data-activity="${name}" data-description="${details.description}" data-schedule="${formattedSchedule}">
+          <span class="share-icon">🔗</span> Share Activity
+        </button>
+      </div>
     `;
 
     // Add click handlers for delete buttons
@@ -646,6 +680,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handler for share button
+    const shareButton = activityCard.querySelector(".share-button");
+    shareButton.addEventListener("click", () => {
+      openShareModal(name, details.description, formattedSchedule);
+    });
 
     activitiesList.appendChild(activityCard);
   }
@@ -697,6 +737,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Update current time filter and fetch activities
       currentTimeRange = button.dataset.time;
+      fetchActivities();
+    });
+  });
+
+  // Add event listeners for difficulty filter buttons
+  difficultyFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+      // Update active class
+      difficultyFilters.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      // Update current difficulty filter and fetch activities
+      currentDifficulty = button.dataset.difficulty;
       fetchActivities();
     });
   });
@@ -919,7 +972,180 @@ document.addEventListener("DOMContentLoaded", () => {
   window.activityFilters = {
     setDayFilter,
     setTimeRangeFilter,
+    setDifficultyFilter,
   };
+
+  // Share functionality
+  function openShareModal(activityName, description, schedule) {
+    // Create share modal if it doesn't exist
+    let shareModal = document.getElementById("share-modal");
+    if (!shareModal) {
+      shareModal = document.createElement("div");
+      shareModal.id = "share-modal";
+      shareModal.className = "modal hidden";
+      shareModal.innerHTML = `
+        <div class="modal-content">
+          <span class="close-share-modal">&times;</span>
+          <h3>Share Activity</h3>
+          <div id="share-activity-info"></div>
+          <div class="share-buttons">
+            <button class="share-platform-button twitter-share" title="Share on Twitter">
+              <span class="share-platform-icon">🐦</span> Twitter
+            </button>
+            <button class="share-platform-button facebook-share" title="Share on Facebook">
+              <span class="share-platform-icon">📘</span> Facebook
+            </button>
+            <button class="share-platform-button whatsapp-share" title="Share on WhatsApp">
+              <span class="share-platform-icon">💬</span> WhatsApp
+            </button>
+            <button class="share-platform-button email-share" title="Share via Email">
+              <span class="share-platform-icon">📧</span> Email
+            </button>
+            <button class="share-platform-button copy-link" title="Copy link to clipboard">
+              <span class="share-platform-icon">📋</span> Copy Link
+            </button>
+          </div>
+          <div id="share-message" class="hidden message"></div>
+        </div>
+      `;
+      document.body.appendChild(shareModal);
+
+      // Add close handler
+      const closeShareModal = shareModal.querySelector(".close-share-modal");
+      closeShareModal.addEventListener("click", () => {
+        shareModal.classList.remove("show");
+        setTimeout(() => {
+          shareModal.classList.add("hidden");
+        }, 300);
+      });
+
+      // Close when clicking outside
+      shareModal.addEventListener("click", (event) => {
+        if (event.target === shareModal) {
+          shareModal.classList.remove("show");
+          setTimeout(() => {
+            shareModal.classList.add("hidden");
+          }, 300);
+        }
+      });
+    }
+
+    // Set activity info
+    const shareActivityInfo = shareModal.querySelector("#share-activity-info");
+    shareActivityInfo.innerHTML = `
+      <p><strong>${activityName}</strong></p>
+      <p>${description}</p>
+      <p><em>${schedule}</em></p>
+    `;
+
+    // Generate shareable content
+    const shareText = `Check out this activity at Mergington High School: ${activityName} - ${description}. Schedule: ${schedule}`;
+    const shareUrl = window.location.href;
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(shareUrl);
+
+    // Add event listeners for share buttons
+    const twitterShare = shareModal.querySelector(".twitter-share");
+    const facebookShare = shareModal.querySelector(".facebook-share");
+    const whatsappShare = shareModal.querySelector(".whatsapp-share");
+    const emailShare = shareModal.querySelector(".email-share");
+    const copyLink = shareModal.querySelector(".copy-link");
+    const shareMessage = shareModal.querySelector("#share-message");
+
+    // Remove old event listeners by cloning
+    const newTwitter = twitterShare.cloneNode(true);
+    const newFacebook = facebookShare.cloneNode(true);
+    const newWhatsapp = whatsappShare.cloneNode(true);
+    const newEmail = emailShare.cloneNode(true);
+    const newCopy = copyLink.cloneNode(true);
+
+    twitterShare.parentNode.replaceChild(newTwitter, twitterShare);
+    facebookShare.parentNode.replaceChild(newFacebook, facebookShare);
+    whatsappShare.parentNode.replaceChild(newWhatsapp, whatsappShare);
+    emailShare.parentNode.replaceChild(newEmail, emailShare);
+    copyLink.parentNode.replaceChild(newCopy, copyLink);
+
+    // Twitter share
+    newTwitter.addEventListener("click", () => {
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+        "_blank",
+        "width=600,height=400"
+      );
+    });
+
+    // Facebook share
+    newFacebook.addEventListener("click", () => {
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        "_blank",
+        "width=600,height=400"
+      );
+    });
+
+    // WhatsApp share
+    newWhatsapp.addEventListener("click", () => {
+      window.open(
+        `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+        "_blank"
+      );
+    });
+
+    // Email share
+    newEmail.addEventListener("click", () => {
+      const subject = encodeURIComponent(`Activity at Mergington High School: ${activityName}`);
+      const body = encodeURIComponent(`${shareText}\n\nView more at: ${shareUrl}`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    });
+
+    // Copy link
+    newCopy.addEventListener("click", async () => {
+      try {
+        // Create a more detailed shareable text
+        const fullShareText = `${shareText}\n\nView more at: ${shareUrl}`;
+        
+        // Try using clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(fullShareText);
+          showShareMessage("Link copied to clipboard!", "success");
+        } else {
+          // Fallback for older browsers
+          const textArea = document.createElement("textarea");
+          textArea.value = fullShareText;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-999999px";
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand("copy");
+            showShareMessage("Link copied to clipboard!", "success");
+          } catch (err) {
+            showShareMessage("Failed to copy link", "error");
+          }
+          document.body.removeChild(textArea);
+        }
+      } catch (err) {
+        showShareMessage("Failed to copy link", "error");
+      }
+    });
+
+    // Show message in share modal
+    function showShareMessage(text, type) {
+      shareMessage.textContent = text;
+      shareMessage.className = `message ${type}`;
+      shareMessage.classList.remove("hidden");
+
+      setTimeout(() => {
+        shareMessage.classList.add("hidden");
+      }, 3000);
+    }
+
+    // Show modal
+    shareModal.classList.remove("hidden");
+    setTimeout(() => {
+      shareModal.classList.add("show");
+    }, 10);
+  }
 
   // Initialize app
   loadDarkModePreference();
