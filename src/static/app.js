@@ -248,7 +248,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Dark mode functions
   function getSystemDarkModePreference() {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    try {
+      const mediaQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+      return mediaQuery ? mediaQuery.matches : false;
+    } catch (error) {
+      console.warn("Unable to detect system dark mode preference:", error);
+      return false;
+    }
   }
 
   function toggleDarkMode() {
@@ -264,7 +270,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateDarkModeUI() {
     document.body.classList.toggle('dark-mode', isDarkMode);
-    themeIcon.textContent = isDarkMode ? "☀️" : "🌙";
+    if (themeIcon) {
+      themeIcon.textContent = isDarkMode ? "☀️" : "🌙";
+    }
   }
 
   function loadDarkModePreference() {
@@ -285,7 +293,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Event listener for dark mode toggle
-  darkModeToggle.addEventListener("click", toggleDarkMode);
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+  }
 
   // Close login modal when clicking outside
   window.addEventListener("click", (event) => {
