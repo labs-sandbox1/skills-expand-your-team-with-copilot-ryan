@@ -657,7 +657,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Days of the week
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     
-    // Time slots from 6:00 AM to 6:00 PM (12 hours)
+    // Time slots from 6:00 AM to 6:00 PM (displays time labels)
+    // Note: 6:00 PM is included as a label but activities ending at 6:00 PM won't get a cell there
     const startHour = 6;
     const endHour = 18;
     const timeSlots = [];
@@ -771,7 +772,7 @@ document.addEventListener("DOMContentLoaded", () => {
         activityEl.className = `calendar-activity ${activity.type}`;
         
         // Calculate position and height
-        const durationHours = activity.endHour - activity.startHour + (activity.endMinute / 60) - (activity.startMinute / 60);
+        const durationHours = (activity.endHour - activity.startHour) + (activity.endMinute - activity.startMinute) / 60;
         const height = Math.max(durationHours * 60, 30); // Minimum 30px height
         const topOffset = (activity.startMinute / 60) * 60; // Offset within the hour
         
