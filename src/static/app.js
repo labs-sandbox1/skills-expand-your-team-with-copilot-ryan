@@ -251,7 +251,11 @@ document.addEventListener("DOMContentLoaded", () => {
     isDarkMode = !isDarkMode;
     updateDarkModeUI();
     // Save preference to localStorage
-    localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
+    try {
+      localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
+    } catch (error) {
+      console.warn("Unable to save dark mode preference:", error);
+    }
   }
 
   function updateDarkModeUI() {
@@ -265,8 +269,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadDarkModePreference() {
-    const savedPreference = localStorage.getItem("darkMode");
-    isDarkMode = savedPreference === "enabled";
+    try {
+      const savedPreference = localStorage.getItem("darkMode");
+      isDarkMode = savedPreference === "enabled";
+    } catch (error) {
+      console.warn("Unable to load dark mode preference:", error);
+      isDarkMode = false;
+    }
     updateDarkModeUI();
   }
 
