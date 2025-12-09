@@ -26,6 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
 
+  // Dark mode elements
+  const darkModeToggle = document.getElementById("dark-mode-toggle");
+  const themeIcon = document.querySelector(".theme-icon");
+
   // Activity categories with corresponding colors
   const activityTypes = {
     sports: { label: "Sports", color: "#e8f5e9", textColor: "#2e7d32" },
@@ -45,6 +49,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+
+  // Dark mode state
+  let isDarkMode = false;
+  let darkModeMediaQuery = null;
+
+  // Initialize dark mode media query
+  try {
+    darkModeMediaQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  } catch (error) {
+    console.warn("Unable to initialize dark mode media query:", error);
+  }
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -262,6 +277,51 @@ document.addEventListener("DOMContentLoaded", () => {
   loginButton.addEventListener("click", openLoginModal);
   logoutButton.addEventListener("click", logout);
   closeLoginModal.addEventListener("click", closeLoginModalHandler);
+
+  // Dark mode functions
+  function getSystemDarkModePreference() {
+    return darkModeMediaQuery ? darkModeMediaQuery.matches : false;
+  }
+
+  function toggleDarkMode() {
+    isDarkMode = !isDarkMode;
+    updateDarkModeUI();
+    // Save preference to localStorage
+    try {
+      localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
+    } catch (error) {
+      console.warn("Unable to save dark mode preference:", error);
+    }
+  }
+
+  function updateDarkModeUI() {
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    if (themeIcon) {
+      themeIcon.textContent = isDarkMode ? "☀️" : "🌙";
+    }
+  }
+
+  function loadDarkModePreference() {
+    try {
+      const savedPreference = localStorage.getItem("darkMode");
+      if (savedPreference) {
+        isDarkMode = savedPreference === "enabled";
+      } else {
+        // Check system preference if no saved preference exists
+        isDarkMode = getSystemDarkModePreference();
+      }
+    } catch (error) {
+      console.warn("Unable to load dark mode preference:", error);
+      // Fallback to system preference if localStorage is unavailable
+      isDarkMode = getSystemDarkModePreference();
+    }
+    updateDarkModeUI();
+  }
+
+  // Event listener for dark mode toggle
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+  }
 
   // Close login modal when clicking outside
   window.addEventListener("click", (event) => {
@@ -1088,6 +1148,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initialize app
+  loadDarkModePreference();
   checkAuthentication();
   initializeFilters();
   fetchActivities();
